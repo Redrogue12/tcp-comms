@@ -45,13 +45,33 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  // Receive message from client
-  read(new_socket, buffer, 1024);
-  printf("Client: %s\n", buffer);
+  while(1) {
+    // Receive message
+    memset(buffer, 0, sizeof(buffer));
+    int valread = read(new_socket, buffer, sizeof(buffer));
+    if (valread > 0) {
+      printf("Client: %s", buffer);
+    }
 
-  // Send response
-  char *response = "Hello from server!";
-  send(new_socket, response, strlen(response), 0);
+    // Check for exit condition
+    if (strncmp(buffer, "exit", 4) == 0) {
+      printf("Client disconnected.\n");
+      break;
+    }
+
+    // Get user input
+    printf("Server: ");
+    fgets(buffer, sizeof(buffer), stdin);
+
+    // Send message
+    send(new_socket, buffer, strlen(buffer), 0);
+
+    // Exit if user types "exit"
+    if (strncmp(buffer, "exit", 4) == 0) {
+      printf("Closing connection.\n");
+      break;
+    }
+  }
 
   close(new_socket);
   close(server_fd);

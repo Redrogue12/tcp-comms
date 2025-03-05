@@ -1,0 +1,10 @@
+# Ignore compiled binary files
+server
+client
+
+# Ignore object files
+*.o
+
+# Ignore debug files
+*.out
+*.exe
