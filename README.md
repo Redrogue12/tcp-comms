@@ -1,8 +1,8 @@
 # tcp-comms
 Simple TCP server/client in C
 
-server.c
----
+## server.c
+
 - Create a TCP socket.
 - Bind it to a port (8080).
 - Start listening for client connections.
@@ -11,8 +11,8 @@ server.c
 - Send a response back.
 - Close the connection.
 
-client.c
----
+## client.c
+
 - Create a TCP socket.
 - Define the server address (IP and port 8080).
 - Connect to the server.
@@ -20,3 +20,7 @@ client.c
 - Receive a response from the server.
 - Print the server’s response.
 - Close the connection.
+
+## Formatting
+
+clang-format
