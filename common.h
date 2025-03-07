@@ -18,4 +18,6 @@
 int create_socket();
 void setup_address(struct sockaddr_in *address, const char *ip);
 
+extern int prompt;
+
 #endif // COMMON_H

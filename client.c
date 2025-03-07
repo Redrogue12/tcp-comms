@@ -23,9 +23,6 @@ int main(int argc, char *argv[]) {
 
   fd_set read_fds;
   while (1) {
-    printf(CYAN "You: " RESET_COLOR);
-    fflush(stdout);
-
     FD_ZERO(&read_fds);
     FD_SET(STDIN_FILENO, &read_fds);
     FD_SET(socket, &read_fds);
@@ -33,6 +30,9 @@ int main(int argc, char *argv[]) {
     select(socket + 1, &read_fds, NULL, NULL, NULL);
 
     if (FD_ISSET(STDIN_FILENO, &read_fds)) {
+      printf(CYAN "You: " RESET_COLOR);
+      fflush(stdout);
+      
       memset(buffer, 0, sizeof(buffer));
       fgets(buffer, sizeof(buffer), stdin);
       send(socket, buffer, strlen(buffer), 0);
@@ -44,12 +44,13 @@ int main(int argc, char *argv[]) {
     }
 
     if (FD_ISSET(socket, &read_fds)) {
+      printf(CYAN "You: " RESET_COLOR);
+      fflush(stdout);
+
       memset(buffer, 0, sizeof(buffer));
       int valread = read(socket, buffer, sizeof(buffer));
       if (valread > 0) {
         printf("\n" YELLOW "Server: %s" RESET_COLOR, buffer);
-        printf(CYAN "You: " RESET_COLOR);
-        fflush(stdout);
       } else if (valread == 0) {
         printf(GREEN "\nServer closed the connection.\n" RESET_COLOR);
         break;

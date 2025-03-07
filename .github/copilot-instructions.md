@@ -9,11 +9,15 @@ If the new code suggestion is a major overhaul of a file, then you can display t
 
 3. Format the code as per default on clang-format.
 
-4. As the project grows in size and complexity, place more emphasis in best practices:
+4. As the project grows in size and complexity, place more emphasis in suggesting best practices:
+- suggest changes, but when presenting code, only present the requested changes, rather than the best practice suggestions until prompted to do so.
 - if there is repetitive code, suggest refactoring it in a function, or if the code is shared in multiple files, maybe suggest extracting the code in another more appropriate file, as the situation allows.
 - be mindful of resource management.
 - error handling is always important.
 - structure code for better readability and maintainability.
+- make sure a suggestion does not introduce another problem, the expectation is that the code should run as it was plus the improvement.
+- if a request is not totally clear, ask for more details instead of generating the same previous response over and over.
+- when given a file or piece of code as reference for a prompt, if you catch a logic error, state it explicitly instad of regenerating the whole code again without pointing it out.
 
 5. This project is a learning opportunity, make sure to give detailed explanations of what new code does when appropriate.
 
