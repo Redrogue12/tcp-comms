@@ -1,33 +1,14 @@
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/select.h>
-#include <unistd.h>
-
-#define PORT 8080
-
-#define RESET_COLOR "\033[0m"
-#define CYAN "\033[96m"
-#define YELLOW "\033[93m"
-#define GREEN "\033[92m"
+#include "common.h"
 
 int main() {
-  int sock;
+  int socket;
   struct sockaddr_in server_address;
   char buffer[1024] = {0};
 
-  sock = socket(AF_INET, SOCK_STREAM, 0);
-  if (sock < 0) {
-    perror("Socket creation error");
-    exit(EXIT_FAILURE);
-  }
+  socket = create_socket();
+  setup_address(&server_address, "127.0.0.1");
 
-  server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(PORT);
-  inet_pton(AF_INET, "127.0.0.1", &server_address.sin_addr);
-
-  if (connect(sock, (struct sockaddr *)&server_address,
+  if (connect(socket, (struct sockaddr *)&server_address,
               sizeof(server_address)) < 0) {
     perror("Connection Failed");
     exit(EXIT_FAILURE);
@@ -42,14 +23,14 @@ int main() {
 
     FD_ZERO(&read_fds);
     FD_SET(STDIN_FILENO, &read_fds);
-    FD_SET(sock, &read_fds);
+    FD_SET(socket, &read_fds);
 
-    select(sock + 1, &read_fds, NULL, NULL, NULL);
+    select(socket + 1, &read_fds, NULL, NULL, NULL);
 
     if (FD_ISSET(STDIN_FILENO, &read_fds)) {
       memset(buffer, 0, sizeof(buffer));
       fgets(buffer, sizeof(buffer), stdin);
-      send(sock, buffer, strlen(buffer), 0);
+      send(socket, buffer, strlen(buffer), 0);
 
       if (strncmp(buffer, "exit", 4) == 0) {
         printf(GREEN "Closing connection.\n" RESET_COLOR);
@@ -57,9 +38,9 @@ int main() {
       }
     }
 
-    if (FD_ISSET(sock, &read_fds)) {
+    if (FD_ISSET(socket, &read_fds)) {
       memset(buffer, 0, sizeof(buffer));
-      int valread = read(sock, buffer, sizeof(buffer));
+      int valread = read(socket, buffer, sizeof(buffer));
       if (valread > 0) {
         printf("\n" YELLOW "Server: %s" RESET_COLOR, buffer);
         printf(CYAN "You: " RESET_COLOR);
@@ -73,6 +54,6 @@ int main() {
     }
   }
 
-  close(sock);
+  close(socket);
   return 0;
 }

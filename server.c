@@ -1,16 +1,4 @@
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/select.h>
-#include <unistd.h>
-
-#define PORT 8080
-
-#define RESET_COLOR "\033[0m"
-#define CYAN "\033[96m"
-#define YELLOW "\033[93m"
-#define GREEN "\033[92m"
+#include "common.h"
 
 int main() {
   int server_fd, new_socket;
@@ -18,17 +6,10 @@ int main() {
   int addrlen = sizeof(address);
   char buffer[1024] = {0};
 
-  server_fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (server_fd == 0) {
-    perror("Socket failed");
-    exit(EXIT_FAILURE);
-  }
+  server_fd = create_socket();
+  setup_address(&address, NULL);
 
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = INADDR_ANY;
-  address.sin_port = htons(PORT);
   bind(server_fd, (struct sockaddr *)&address, sizeof(address));
-
   listen(server_fd, 3);
   printf(GREEN "Server listening on port %d...\n" RESET_COLOR, PORT);
 
