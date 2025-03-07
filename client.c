@@ -1,12 +1,18 @@
 #include "common.h"
 
-int main() {
+int main(int argc, char *argv[])
+{
   int socket;
   struct sockaddr_in server_address;
   char buffer[1024] = {0};
+  const char *server_ip = "127.0.0.1";
+
+  if (argc > 1) {
+    server_ip = argv[1];
+  }
 
   socket = create_socket();
-  setup_address(&server_address, "127.0.0.1");
+  setup_address(&server_address, server_ip);
 
   if (connect(socket, (struct sockaddr *)&server_address,
               sizeof(server_address)) < 0) {
