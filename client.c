@@ -1,7 +1,6 @@
 #include "common.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   int socket;
   struct sockaddr_in server_address;
   char buffer[1024] = {0};
@@ -51,9 +50,7 @@ int main(int argc, char *argv[])
         printf("\n" YELLOW "Server: %s" RESET_COLOR, buffer);
         printf(CYAN "You: " RESET_COLOR);
         fflush(stdout);
-      }
-
-      if (strncmp(buffer, "exit", 4) == 0) {
+      } else if (valread == 0) {
         printf(GREEN "\nServer closed the connection.\n" RESET_COLOR);
         break;
       }
