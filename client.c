@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
       send(socket, buffer, strlen(buffer), 0);
 
       if (strncmp(buffer, "exit", 4) == 0) {
-        print_message(GREEN, "Closing connection.", "");
+        print_message(GREEN, "\nClosing connection.", "");
         break;
       }
     }
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         print_message(YELLOW, "\nServer: ", buffer);
         print_message(CYAN, "You: ", "");
       } else if (valread == 0) {
-        print_message(GREEN, "Server closed the connection.", "");
+        print_message(GREEN, "\nServer closed the connection.", "");
         break;
       }
     }

@@ -37,7 +37,7 @@ int main() {
       perror("Accept failed");
       exit(EXIT_FAILURE);
     }
-    print_message(GREEN, "Client connected.\n", "");
+    print_message(GREEN, "\nClient connected.\n", "");
     print_message(CYAN, "You: ", "");
 
     fd_set read_fds;
@@ -72,7 +72,7 @@ int main() {
           print_message(YELLOW, "\nClient: ", buffer);
           print_message(CYAN, "You: ", "");
         } else if (valread == 0) {
-          print_message(GREEN, "Client disconnected.", "");
+          print_message(GREEN, "\nClient disconnected.", "");
           break;
         }
       }
