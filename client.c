@@ -19,7 +19,8 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  printf(GREEN "Connected to server. Type 'exit' to quit.\n" RESET_COLOR);
+  print_message(GREEN, "Connected to server. Type 'exit' to quit.\n", "");
+  print_message(CYAN, "You: ", "");
 
   fd_set read_fds;
   while (1) {
@@ -30,29 +31,29 @@ int main(int argc, char *argv[]) {
     select(socket + 1, &read_fds, NULL, NULL, NULL);
 
     if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-      printf(CYAN "You: " RESET_COLOR);
-      fflush(stdout);
-      
+      print_message(CYAN, "You: ", "");
+
       memset(buffer, 0, sizeof(buffer));
       fgets(buffer, sizeof(buffer), stdin);
       send(socket, buffer, strlen(buffer), 0);
 
       if (strncmp(buffer, "exit", 4) == 0) {
-        printf(GREEN "Closing connection.\n" RESET_COLOR);
+        print_message(GREEN, "Closing connection.", "");
         break;
       }
     }
 
     if (FD_ISSET(socket, &read_fds)) {
-      printf(CYAN "You: " RESET_COLOR);
-      fflush(stdout);
+      // Move cursor up and clear the line
+      // printf("\033[A\033[2K");
 
       memset(buffer, 0, sizeof(buffer));
       int valread = read(socket, buffer, sizeof(buffer));
       if (valread > 0) {
-        printf("\n" YELLOW "Server: %s" RESET_COLOR, buffer);
+        print_message(YELLOW, "\nServer: ", buffer);
+        print_message(CYAN, "You: ", "");
       } else if (valread == 0) {
-        printf(GREEN "\nServer closed the connection.\n" RESET_COLOR);
+        print_message(GREEN, "Server closed the connection.", "");
         break;
       }
     }

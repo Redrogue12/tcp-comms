@@ -7,9 +7,17 @@ int main() {
   struct sockaddr_in address;
   int addrlen = sizeof(address);
   char buffer[1024] = {0};
-  int exit_p = 0;
+  int exit_p = 0; // flag for exiting program from inner while loop.
 
   server_fd = create_socket();
+
+  // Set the SO_REUSEADDR option
+  int opt = 1;
+  if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
+  }
+
   setup_address(&address, NULL);
 
   if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
@@ -20,19 +28,17 @@ int main() {
     perror("Listen failed");
     exit(EXIT_FAILURE);
   }
-  printf(GREEN "Server listening on port %d...\n" RESET_COLOR, PORT);
+  print_message(GREEN, "Server listening on port ", "8080...\n");
 
-  while (!exit_p)
-  {
+  while (!exit_p) {
     new_socket =
         accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
     if (new_socket < 0) {
       perror("Accept failed");
       exit(EXIT_FAILURE);
     }
-    printf(GREEN "Client connected.\n" RESET_COLOR);
-    printf(CYAN "You: " RESET_COLOR);
-    fflush(stdout);
+    print_message(GREEN, "Client connected.\n", "");
+    print_message(CYAN, "You: ", "");
 
     fd_set read_fds;
     while (1) {
@@ -43,30 +49,30 @@ int main() {
       select(new_socket + 1, &read_fds, NULL, NULL, NULL);
 
       if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-        printf(CYAN "You: " RESET_COLOR);
-        fflush(stdout);
+        print_message(CYAN, "You: ", "");
 
         memset(buffer, 0, sizeof(buffer));
         fgets(buffer, sizeof(buffer), stdin);
         send(new_socket, buffer, strlen(buffer), 0);
 
         if (strncmp(buffer, "exit", 4) == 0) {
-          printf(GREEN "Closing connection.\n" RESET_COLOR);
-          fflush(stdout);
+          print_message(GREEN, "Closing connection.", "");
           exit_p = 1;
           break;
         }
       }
 
       if (FD_ISSET(new_socket, &read_fds)) {
+        // Move cursor up and clear the line
+        // printf("\033[A\033[2K");
+
         memset(buffer, 0, sizeof(buffer));
         int valread = read(new_socket, buffer, sizeof(buffer));
         if (valread > 0) {
-          printf("\n" YELLOW "Client: %s" RESET_COLOR, buffer);
-          fflush(stdout);
+          print_message(YELLOW, "\nClient: ", buffer);
+          print_message(CYAN, "You: ", "");
         } else if (valread == 0) {
-          printf(GREEN "\nClient disconnected.\n" RESET_COLOR);
-          fflush(stdout);
+          print_message(GREEN, "Client disconnected.", "");
           break;
         }
       }
@@ -74,7 +80,6 @@ int main() {
     close(new_socket);
   }
 
-  close(new_socket);
   close(server_fd);
   return 0;
 }

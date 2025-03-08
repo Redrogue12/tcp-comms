@@ -18,6 +18,8 @@ If the new code suggestion is a major overhaul of a file, then you can display t
 - make sure a suggestion does not introduce another problem, the expectation is that the code should run as it was plus the improvement.
 - if a request is not totally clear, ask for more details instead of generating the same previous response over and over.
 - when given a file or piece of code as reference for a prompt, if you catch a logic error, state it explicitly instad of regenerating the whole code again without pointing it out.
+- when answering a prompt, limit yourself to adding code related to the prompt.
+- if something cannot be done, or done properly, you can state so instead of inventing code or repeating the same suggestion over and over.
 
 5. This project is a learning opportunity, make sure to give detailed explanations of what new code does when appropriate.
 

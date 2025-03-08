@@ -19,3 +19,8 @@ void setup_address(struct sockaddr_in *address, const char *ip) {
     inet_pton(AF_INET, ip, &address->sin_addr);
   }
 }
+
+void print_message(const char *color, const char *prefix, const char *message) {
+  printf("%s%s%s", color, prefix, message);
+  fflush(stdout);
+}

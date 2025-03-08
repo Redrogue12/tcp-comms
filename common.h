@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/select.h>
+#include <unistd.h>
 
 #define PORT 8080
 
@@ -17,7 +17,8 @@
 
 int create_socket();
 void setup_address(struct sockaddr_in *address, const char *ip);
+void print_message(const char *color, const char *prefix, const char *message);
 
 extern int prompt;
 
-#endif // COMMON_H
+#endif
