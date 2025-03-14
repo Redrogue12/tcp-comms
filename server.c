@@ -11,7 +11,6 @@ int main() {
 
   server_fd = create_socket();
 
-  // Set the SO_REUSEADDR option
   int opt = 1;
   if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
     perror("setsockopt");
@@ -24,6 +23,7 @@ int main() {
     perror("Bind failed");
     exit(EXIT_FAILURE);
   }
+
   if (listen(server_fd, 3) < 0) {
     perror("Listen failed");
     exit(EXIT_FAILURE);
@@ -63,9 +63,6 @@ int main() {
       }
 
       if (FD_ISSET(new_socket, &read_fds)) {
-        // Move cursor up and clear the line
-        // printf("\033[A\033[2K");
-
         memset(buffer, 0, sizeof(buffer));
         int valread = read(new_socket, buffer, sizeof(buffer));
         if (valread > 0) {

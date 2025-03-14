@@ -44,9 +44,6 @@ int main(int argc, char *argv[]) {
     }
 
     if (FD_ISSET(socket, &read_fds)) {
-      // Move cursor up and clear the line
-      // printf("\033[A\033[2K");
-
       memset(buffer, 0, sizeof(buffer));
       int valread = read(socket, buffer, sizeof(buffer));
       if (valread > 0) {
